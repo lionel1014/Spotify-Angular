@@ -6,15 +6,15 @@ const routes: Routes = [
   //TODO:desde aquí, empezamos a llamar los módulos.
   {
     path: 'tracks',
-    loadChildren: () => import('@modules/tracks/tracks.module').then(m => m.TracksModule),
+    loadChildren: () => import('@modules/tracks/tracks.module').then(m => m.TracksModule)
+  },
+  {
+    path: 'favorites',
+    loadChildren: () => import('@modules/favorites/favorites.module').then(m => m.FavoritesModule)
   },
   {
     path: 'history',
-    loadChildren: () => import('@modules/history/history.module').then(m => m.HistoryModule),
-  },
-  {
-    path: 'favorite',
-    loadChildren: () => import('@modules/favorites/favorites.module').then(m => m.FavoritesModule),
+    loadChildren: () => import('@modules/history/history.module').then(m => m.HistoryModule)
   },
 ];
 
