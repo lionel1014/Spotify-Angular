@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-side-bar',
@@ -14,30 +15,31 @@ export class SideBarComponent implements OnInit {
 
   customOptions: Array<any> = []
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.mainMenu.defaultOptions = [
       {
         name: 'Home',
         icon: 'uil-house-user',
-        router: ['/', 'auth']
+        router: ['/']
       },
       {
         name: 'Buscar',
         icon: 'uil uil-search',
-        router: ['/', 'history']
+        router: ['/', 'history']//TODO: http://localhost:4200/history
+        //FIXME: por lo que... router:['/','auth','pepe'] --> es http://localhost:4200/auth/pepe 
       },
       {
         name: 'Favoritos',
         icon: 'uil-file-heart',
-        router: ['/', 'favority']
+        router: ['/', 'favorites'],
+        query: { hola: 'mundo como estas' },
       },
       {
         name: 'Tu biblioteca',
         icon: 'uil uil-headphones',
-        router: ['/', 'favorites'],
-        query: { hola: 'mundo' }
+        router: ['/', 'tracks'],
       },
       {
         name: 'Nick',
@@ -78,4 +80,20 @@ export class SideBarComponent implements OnInit {
     ]
   }
 
+  goTo($event:any): void{
+
+    this.router.navigate(['/', 'favorites'],{
+      queryParams:{
+        key1:'valor1',
+        key2:'valor2',
+        key3:'valor3',
+      }
+    });
+    // console.log($event);
+  }
+
 }
+
+//TODO: URL con parámetros --> http://localhost/parametro1/parametro2
+//FIXME: URL con query params (parametros de consulta):
+//http://localhost/parametro1?query=valor1&query2=valor2
