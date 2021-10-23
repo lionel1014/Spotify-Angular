@@ -1,17 +1,18 @@
 <!-- <p>play-list-body works!</p> -->
 <div class="play-list-body">
     <ul class="play-list-table-header">
-        <li >Nombre ❤</li>
-        <li >álbum 🆗</li>
-        <li>fecha incorporación 🍌😁</li>
+        <li (click)="changeSort('name')" ><u>Nombre ❤</u></li>
+        <li (click)="changeSort('album')" >Álbum 🆗</li>
+        <li >Fecha incorporación 🍌😁</li>
         <li><i class="uil uil-clock-eight"></i></li>
     </ul>
-    <ul class="play-list-rows" *ngFor="let item of tracks">
+    <ul class="play-list-rows" *ngFor="let item of tracks | orderList: optionSort.property : optionSort.order">
         <li class="track-name">
             <ng-container *ngTemplateOutlet="coverSection;context:{track:item}"></ng-container>
+            <!-- el context: envia el track, con un valor -->
         </li>
         <li class="track-name-opacity">
-            {{item.album}}
+            🐱‍👤{{item.album}}
         </li>
         <li class="track-name-opacity">
             {{item.album}}
@@ -24,7 +25,7 @@
 </div>
 
 <!--template del cover-->
-<ng-template #coverSection let-item="track">
+<ng-template #coverSection let-item="track"> <!-- el valor recibido, se guarda en item -->
 
     <div class="cover-section">
         <img appImgBroken class="cover-track" [src]="item.cover" [alt]="item.name">

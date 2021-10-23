@@ -9,7 +9,16 @@ import * as dataRow from '../../../data/tracks.json';
 })
 export class PlayListBodyComponent implements OnInit {
 
-  tracks: TrackModel[] =[];
+  tracks: TrackModel[] = [];
+  
+  //declaro un opttionSort para las opciones de Lista
+  optionSort : {
+    property : string | null,
+    order : string,
+  } = {
+    property : null,
+    order : 'desc',
+  };
 
   constructor() { }
 
@@ -20,4 +29,15 @@ export class PlayListBodyComponent implements OnInit {
     this.tracks = data;
 
   }
+
+  changeSort( prop :string ):void{
+    
+    const {order} = this.optionSort;
+    this.optionSort = {
+      property : prop,
+      order : order === 'asc' ? 'desc' : 'asc',
+    }
+
+  }
+
 }
