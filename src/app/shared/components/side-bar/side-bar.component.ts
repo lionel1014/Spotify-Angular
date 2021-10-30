@@ -44,7 +44,7 @@ export class SideBarComponent implements OnInit {
       {
         name: 'Nick',
         icon: 'uil uil-user-exclamation',
-        router: ['/', 'nick'],
+        router: ['/', 'auth'],
       }
       
     ]

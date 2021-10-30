@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TrackModel } from '@core/models/tracks.model';
+import { MultimediaService } from '@shared/services/multimedia.service';
+import { Subscription } from 'rxjs'; //FIXME: Programacion reactiva.
 
 @Component({
   selector: 'app-media-player',
   templateUrl: './media-player.component.html',
   styleUrls: ['./media-player.component.css']
 })
-export class MediaPlayerComponent implements OnInit {
+export class MediaPlayerComponent implements OnInit , OnDestroy{
 
   //maquetación
   mockCover: TrackModel ={
@@ -17,9 +19,26 @@ export class MediaPlayerComponent implements OnInit {
     _id: 1,
   };
 
-  constructor() { }
+  constructor(private multimediaServicio:MultimediaService) { }
+
+  //Creamos una lista por si tenemos mas subscripciones
+  listObserver$: Array<Subscription> = [];
 
   ngOnInit(): void {
+    //TODO: recibimos los datos del servicio, propocionados por CardPlayer
+    const observer1:Subscription = this.multimediaServicio.callback.subscribe((response: TrackModel)=>{
+      console.log("Recibi los datos de CardPlayer",response);
+      this.mockCover = {
+        ...response
+      }
+    })
+
+    this.listObserver$ = [observer1];
+  }
+
+  ngOnDestroy():void {
+    this.listObserver$.forEach( u => u.unsubscribe);
+    console.log("Componente destruido 🎇🎆🥊");
   }
 
 }
