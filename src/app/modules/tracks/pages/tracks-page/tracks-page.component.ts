@@ -3,9 +3,6 @@ import { TrackModel } from '@core/models/tracks.model';
 import { TrackService } from '@modules/tracks/services/track.service';
 import { Subscription } from 'rxjs';
 
-// import * as dataRaw from '../../../../data/tracks.json';
-//dataRaw es data cruda
-
 @Component({
   selector: 'app-tracks-page',
   templateUrl: './tracks-page.component.html',
@@ -25,33 +22,38 @@ export class TracksPageComponent implements OnInit , OnDestroy {
   constructor(private tracksServicio : TrackService) { }
 
   ngOnInit(): void {
+    this.loadDataAll();
+    this.loadDataReverse();
+  }
 
-    const observer1$ = this.tracksServicio.getAllTracks$()
-      .subscribe( (response : TrackModel[]) =>{
-        // const {data} = response;
-        // console.log("Capture las canciones yo solo",response);
-        this.tracksTrending = [...response];
-        // this.tracksRamdom = response;
-      });
+  async loadDataAll(): Promise<void> { //TODO: forma simplificada de subscribirnos a los observables
 
-    //TODO: intento de aleatorio
-    // const observer2$ = this.tracksServicio.getTrackRamdom$()
-    // .subscribe( (response : TrackModel[]) =>{
-    //   // const {data} = response;
-    //   console.log("Capture las canciones yo solo",response);
-    //   this.tracksRamdom = [...response];
-    // })
+    this.tracksTrending = await this.tracksServicio.getAllTracks$().toPromise()
+      // .catch(err => console.log("no se pudo conectar", err));
+    this.tracksRamdom = await this.tracksServicio.getAllTracksReverse$().toPromise()
+      // .catch(err => console.log("Error de conexion TracksReverse", err));
 
-    const observer2$ = this.tracksServicio.getAllTracksReverse$()
-    .subscribe( (response : TrackModel[]) =>{
-      this.tracksRamdom = [...response];
-    })
+  }
+  // loadDataAll(): void {
+    // this.tracksServicio.getAllTracks$().toPromise()
+    //   .then( (tracks: TrackModel[]) =>{
+    //     this.tracksTrending = tracks;
+    //   })
+    //   .catch( error => console.log("Error al cargar tracksServicio",error))
+  // }
+  loadDataReverse(): void {
 
-    this.listObservers$ = [observer1$ , observer2$ ];
+  //   this.tracksServicio.getAllTracksReverse$()
+  //   .subscribe( (response : TrackModel[]) =>{
+  //     this.tracksRamdom = [...response];
+  //   }, error => {
+  //     console.log("Error al cargar tracksServicio",error);
+  //   });
+
   }
 
   ngOnDestroy():void {
-    this.listObservers$.forEach( u => u.unsubscribe );
+    // this.listObservers$.forEach( u => u.unsubscribe );
   }
 
 }
