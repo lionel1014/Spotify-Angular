@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@modules/auth/services/auth.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login-page',
@@ -11,7 +12,9 @@ export class LoginPageComponent implements OnInit {
 
   formLogin: FormGroup = new FormGroup({});
 
-  constructor(private _asAuthServicio:AuthService) { }
+  errorSession : Boolean = false;
+
+  constructor(private _asAuthServicio:AuthService, private cookie: CookieService) { }
 
   ngOnInit(): void {
     this.formLogin = new FormGroup(
@@ -32,7 +35,21 @@ export class LoginPageComponent implements OnInit {
 
   enviarLogin():void{
     const { emailcontrol , password } = this.formLogin.value;
-    this._asAuthServicio.sendCredentials( emailcontrol , password );
+    this._asAuthServicio.sendCredentials( emailcontrol , password )
+      .subscribe(response => { //cuando el usuario ingresa credenciales correctas✔✔✔
+        //TODO: 200 >= x < 400
+
+        const {tokenSession} = response;
+        this.errorSession = false;
+        console.log("Sesión iniciada correcta",tokenSession);
+
+        this.cookie.set("token",tokenSession,3,"/") //el nombre del token, el token, la duracion y direccion a funcionar(/raiz)
+
+      }, err =>{
+        //TODO: 400 >= x
+        this.errorSession = true;
+        console.log("Sesión iniciada incorrecta",err.error);
+      })
     // console.log('🐄🐮🐄',dataLogin);
   }
 
