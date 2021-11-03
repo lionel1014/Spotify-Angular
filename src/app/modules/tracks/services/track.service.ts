@@ -27,7 +27,7 @@ export class TrackService {
   }
 
   getAllTracks$(): Observable<any> {
-    return this.httpCliente.get(`${this.URL}/tracks`)//la URL
+    return this.httpCliente.get(`${this.URL}/tracks`)//la URL y tambien un encabezado personalizado
     .pipe(
       map(( {data}:any ) =>{
         return data;
@@ -61,6 +61,10 @@ export class TrackService {
         }),
         map(( dataRevertida:any ) =>{
          return dataRevertida.filter( (track:TrackModel) => track._id !== 2) //TODO: filter comun array
+        }), catchError( err => {
+          const {status,statusText} = err;
+          console.log("Conexion Fallida 😡😡😡" ,[status,statusText])
+          return of(this.trackExample)
         }),
         // tap(data => console.log(data)), //sirve para mostrar el estado actual
 
