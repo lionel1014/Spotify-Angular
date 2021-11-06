@@ -25,6 +25,13 @@ export class MediaPlayerComponent implements OnInit , OnDestroy{
   listObserver$: Array<Subscription> = [];
 
   ngOnInit(): void {
+
+    const observable1$ = this.multimediaServicio.myObservable1$
+      .subscribe(
+        (response) => { console.log("🚿 llego", response) },
+        (responseFail) => {console.log("🐭 tuveria rota", responseFail)}
+      )
+
     //TODO: recibimos los datos del servicio, propocionados por CardPlayer
     const observer1:Subscription = this.multimediaServicio.callback.subscribe((response: TrackModel)=>{
       console.log("Recibi los datos de CardPlayer",response);

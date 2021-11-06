@@ -30,7 +30,7 @@ export class SessionGuard implements CanActivate {
         return false
       }
 
-      console.log("Si Chequeo de CookieSesion: ",token);
+      // console.log("Si Chequeo de CookieSesion: ",token);
       return token;
 
     } catch (e) {

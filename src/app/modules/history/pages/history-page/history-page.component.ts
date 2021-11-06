@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TrackModel } from '@core/models/tracks.model';
 import { SearchService } from '@modules/history/services/search.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-history-page',
@@ -9,8 +9,7 @@ import { SearchService } from '@modules/history/services/search.service';
 })
 export class HistoryPageComponent implements OnInit {
 
-  listResult : TrackModel[] = [];
-
+  listResult$ : Observable<any> = of([]);
   constructor(private searchServicio:SearchService) { }
 
   ngOnInit(): void {
@@ -19,11 +18,12 @@ export class HistoryPageComponent implements OnInit {
   //agarra la busqueda y la toma cuando es .length >= 3
   receiveData(search:string):void{
     
-    this.searchServicio.searchTracks(search)
-      .subscribe(({data})=>{
-        // console.log("❤❤❤❤",response)
-        this.listResult = data;
-      })
+    //listResult es un async, asi que automaticamente se subs, y desubs.
+    this.listResult$ = this.searchServicio.searchTracks(search); 
+      // .subscribe(({data})=>{
+      //   // console.log("❤❤❤❤",response)
+      //   this.listResult$ = data;
+      // })
 
     console.log("🎁->",search);
 
