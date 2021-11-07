@@ -23,8 +23,8 @@ export class CardPlayerComponent implements OnInit {
   sendPlay(track: TrackModel):void{
 
     // console.log("Enviando canción al reproductor(MediaPlayer)",track);
-
-    this.multimediaServicio.callback.emit(track);
+    // this.multimediaServicio.callback.emit(track);
+    this.multimediaServicio.trackInfo$.next(track);
 
   };
 

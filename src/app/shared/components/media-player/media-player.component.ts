@@ -11,36 +11,38 @@ import { Subscription } from 'rxjs'; //FIXME: Programacion reactiva.
 export class MediaPlayerComponent implements OnInit , OnDestroy{
 
   //maquetación
-  mockCover: TrackModel ={
+  /* mockCover !: TrackModel  ={
     cover:'https://png.pngtree.com/png-vector/20190119/ourlarge/pngtree-cartoon-cartoon-bee-bee-little-bee-png-image_474598.jpg',
     album: 'El retorno del abejorro',
     name:'La abeja(Oficial)',
     url: 'http://localhost/algo.mp3',
     _id: 1,
-  };
-
-  constructor(private multimediaServicio:MultimediaService) { }
-
+  }; */
+  
   //Creamos una lista por si tenemos mas subscripciones
   listObserver$: Array<Subscription> = [];
 
+  constructor(public multimediaServicio:MultimediaService) { }
+
   ngOnInit(): void {
 
-    const observable1$ = this.multimediaServicio.myObservable1$
-      .subscribe(
-        (response) => { console.log("🚿 llego", response) },
-        (responseFail) => {console.log("🐭 tuveria rota", responseFail)}
-      )
+    // this.multimediaServicio.trackInfo$.subscribe(
+    //   (response) =>{ 
+    //     console.log("MediaPlayer tracks->",response);
+    //     this.mockCover = response;
+    //   },
+    //   (error) => { console.log("MediaPlayer error ->",error) }
+    // )
 
     //TODO: recibimos los datos del servicio, propocionados por CardPlayer
-    const observer1:Subscription = this.multimediaServicio.callback.subscribe((response: TrackModel)=>{
-      console.log("Recibi los datos de CardPlayer",response);
-      this.mockCover = {
-        ...response
-      }
-    })
+    // const observer1:Subscription = this.multimediaServicio.callback.subscribe((response: TrackModel)=>{
+    //   console.log("Recibi los datos de CardPlayer",response);
+    //   this.mockCover = {
+    //     ...response
+    //   }
+    // })
 
-    this.listObserver$ = [observer1];
+    // this.listObserver$ = [observer1];
   }
 
   ngOnDestroy():void {
