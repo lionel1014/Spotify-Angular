@@ -38,9 +38,11 @@
             <button class="arrow btn">
                 <i class="uil uil-previous"></i>
             </button>
-            <button  class="play btn">
-                <i></i>
-
+            <button (click)="multimediaServicio.stateTrack()" class="play btn">
+                <i [ngClass]="{
+                    'uil-play':state === 'paused',
+                    'uil-pause':state !== 'paused'
+                }" class="uil" ></i>
             </button>
             <button class="arrow btn">
                 <i class="uil uil-step-forward"></i>

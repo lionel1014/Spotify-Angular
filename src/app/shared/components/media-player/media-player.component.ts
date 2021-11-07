@@ -18,14 +18,23 @@ export class MediaPlayerComponent implements OnInit , OnDestroy{
     url: 'http://localhost/algo.mp3',
     _id: 1,
   }; */
-  
+
   //Creamos una lista por si tenemos mas subscripciones
   listObserver$: Array<Subscription> = [];
+
+  state : string = 'paused'
 
   constructor(public multimediaServicio:MultimediaService) { }
 
   ngOnInit(): void {
 
+    const obserser1$ = this.multimediaServicio.playerStatus$
+      .subscribe(
+        (status) => {
+          this.state = status;
+        })
+    
+    this.listObserver$ = [obserser1$];
     // this.multimediaServicio.trackInfo$.subscribe(
     //   (response) =>{ 
     //     console.log("MediaPlayer tracks->",response);

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TrackModel } from '@core/models/tracks.model';
 import { BehaviorSubject, Observable, Observer, Subject } from 'rxjs';
 
@@ -13,6 +13,7 @@ export class MultimediaService {
   public audio : HTMLAudioElement = new Audio(); //Hace referencia a un <audio> y el !: no hace falta inicializar
   public timeElapsed$ : BehaviorSubject<string> = new BehaviorSubject('00:00'); //el tiempo transcurrido
   public timeRemaining$ : BehaviorSubject<string> = new BehaviorSubject('-00:00'); //el tiempo restante
+  public playerStatus$ : BehaviorSubject<string> = new BehaviorSubject('paused'); //
 
   // myObservable1$ : Observable<any> = new Observable;
   // myObservable1$ : Subject<any> = new Subject;
@@ -31,15 +32,39 @@ export class MultimediaService {
         
       }
     )
-
-      this.listenAllEvents()
+    
+    this.listenAllEvents();
 
   }
 
   private listenAllEvents(): void {
     //TODO: addeEventListener recibe 3 argumentos
-    this.audio.addEventListener('timeupdate',this.calculateTime,false)
+    this.audio.addEventListener('timeupdate',this.calculateTime,false);
+    this.audio.addEventListener('playing',this.setPlayerStatus,false); //comienzo de la reproduccion
+    this.audio.addEventListener('play',this.setPlayerStatus,false);
+    this.audio.addEventListener('pause',this.setPlayerStatus,false);
+    this.audio.addEventListener('ended',this.setPlayerStatus,false);
   }
+
+  private setPlayerStatus = (state : any) =>{
+    console.log(state);
+
+    switch (state.type) {
+      case 'play':
+        this.playerStatus$.next('play');
+        break;
+      case 'playing':
+        this.playerStatus$.next('playing');
+        break;
+      case 'ended':
+        this.playerStatus$.next('ended');
+        break;
+      default:
+        this.playerStatus$.next('paused')
+        break;
+    }
+  }
+
 
   private calculateTime=() => {
 
@@ -79,6 +104,7 @@ export class MultimediaService {
     this.timeRemaining$.next(displayFormat);
   }
 
+  //TODO: funciones publicas
 
   public setAudio(track : TrackModel):void {
     
@@ -87,6 +113,11 @@ export class MultimediaService {
     this.audio.src = track.url
     this.audio.play(); //resproduce la musica
 
+  }
+
+  public stateTrack(): void{
+    // console.log("cambio estado de la cancion",this.audio.paused);
+    (this.audio.paused) ? this.audio.play() : this.audio.pause() //boton de paused de play
   }
   // setTimeout(() => {
   //   this.myObservable1$.next('❣❣❣');
