@@ -1,5 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TrackModel } from '@core/models/tracks.model';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MultimediaService } from '@shared/services/multimedia.service';
 import { Subscription } from 'rxjs'; //FIXME: Programacion reactiva.
 
@@ -18,6 +17,8 @@ export class MediaPlayerComponent implements OnInit , OnDestroy{
     url: 'http://localhost/algo.mp3',
     _id: 1,
   }; */
+
+  @ViewChild('progressBar') barraProgresiva : ElementRef = new ElementRef('');
 
   //Creamos una lista por si tenemos mas subscripciones
   listObserver$: Array<Subscription> = [];
@@ -57,6 +58,21 @@ export class MediaPlayerComponent implements OnInit , OnDestroy{
   ngOnDestroy():void {
     this.listObserver$.forEach( u => u.unsubscribe);
     // console.log("Componente destruido 🎇🎆🥊");
+  }
+
+  handlePosition(event: MouseEvent) :void{
+
+    const elementNative = this.barraProgresiva.nativeElement;
+
+    const {clientX} = event;
+    const {x , width} = elementNative.getBoundingClientRect();
+    const clickX = clientX - x; //TODO: donde se hace click - donde comienza el elemento
+
+    const percentageBarX = (clickX * 100) / width; //regla de 3simple
+    
+    this.multimediaServicio.musicProgress(percentageBarX);
+
+    // console.log("clientX, x, width, RefBarraProgeso",clientX,x,width,clickX);
   }
 
 }

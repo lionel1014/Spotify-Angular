@@ -13,7 +13,8 @@ export class MultimediaService {
   public audio : HTMLAudioElement = new Audio(); //Hace referencia a un <audio> y el !: no hace falta inicializar
   public timeElapsed$ : BehaviorSubject<string> = new BehaviorSubject('00:00'); //el tiempo transcurrido
   public timeRemaining$ : BehaviorSubject<string> = new BehaviorSubject('-00:00'); //el tiempo restante
-  public playerStatus$ : BehaviorSubject<string> = new BehaviorSubject('paused'); //
+  public playerStatus$ : BehaviorSubject<string> = new BehaviorSubject('paused'); //estado del tema
+  public playerPercentage$ : BehaviorSubject<number> = new BehaviorSubject(0); // porcentaje del tema
 
   // myObservable1$ : Observable<any> = new Observable;
   // myObservable1$ : Subject<any> = new Subject;
@@ -32,8 +33,8 @@ export class MultimediaService {
         
       }
     )
-    
     this.listenAllEvents();
+    
 
   }
 
@@ -47,7 +48,7 @@ export class MultimediaService {
   }
 
   private setPlayerStatus = (state : any) =>{
-    console.log(state);
+    // console.log(state);
 
     switch (state.type) {
       case 'play':
@@ -73,6 +74,20 @@ export class MultimediaService {
     // console.table([duration,currentTime]);
     this.setTimeElapsed(currentTime);
     this.setTimeRemaining(duration,currentTime);
+    this.trackPorcentage(currentTime,duration);
+  }
+
+  private trackPorcentage( currentTime:number , duration:number ) : void{
+
+    //TODO: Regla de 3 simple
+    //FIXME: duration --> 100%
+    //FIXME: currentTime -> (x)
+    //FIXME: (currentTime * 100%) / duration
+
+    let porcentage = (currentTime * 100) / duration;
+
+    this.playerPercentage$.next(porcentage);
+
   }
 
   //TODO: calcula el tiempo restante
@@ -119,6 +134,17 @@ export class MultimediaService {
     // console.log("cambio estado de la cancion",this.audio.paused);
     (this.audio.paused) ? this.audio.play() : this.audio.pause() //boton de paused de play
   }
+
+  public musicProgress(percentage : number) {
+    //TODO: tenemos el porcentaje del click sobre la barra
+
+    const {duration} = this.audio;
+
+    //regla de 3 simple
+    const percentageToSecunds = (percentage*duration)/100;
+    this.audio.currentTime = percentageToSecunds;
+
+  } 
   // setTimeout(() => {
   //   this.myObservable1$.next('❣❣❣');
   // }, 500);
